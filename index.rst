@@ -107,15 +107,10 @@ The ``TMAState`` states
 The following is a definition of the overall ``TMAStateMachine`` states:
 
 - ``TRACKING``: as per the definition in the introduction, when the TMA is in the ``TRACKING`` state, both axes are powered on *and* not in fault *and* in motion *and* ``inPosition``, *i.e.* it is in the state it would be when tracking an object across the sky.
-
 - ``SLEWING``: as per the definition in the introduction, when the TMA is in the ``SLEWING`` state, *at least one* axis is powered on *and* not in fault *and* in motion. It is possible that the other axis may be also be in motion (in position or otherwise), or not. The other axis might also be in fault, or not.
-
 - ``STOPPED``: Neither axis is in motion, and at least one of them is powered on and not in ``FAULT``, *i.e.* the TMA ``canMove`` but is not moving right now.
-
 - ``OFF``: Both axes are powered off, *i.e.* ``TMA.canMove == False``
-
 - ``FAULT``: Both axes are in fault.
-
 - ``UNINITIALIZED``: this state is currently unused. The intention was to have this be the state the TMA is brought up in, and the state remains like this until each component has had its state set, as time evolves. However, in practice, because event generation currently starts from the start of a ``dayObs`` and doesn't look back in time to find the previously set state, this doesn't work as movements frequently begin before all topics have had their state set. If this turns out to cause problems in practice, then the solution is to simply look back in time from the start of the day to establish the state that the TMA was in, and then work forwards again from that point in time, but so far this has proven unnecessary and wasn't worth the added complexity during the initial design and implementation.
 
 Data Retrieval and Caching
