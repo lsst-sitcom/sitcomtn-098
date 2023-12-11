@@ -18,12 +18,9 @@ A detailed description of what TMAEvents are, and how they're made.
 Introduction and definitions
 ============================
 
-This technote introduces the concept of the ``TMAEvent``, and motivates
-their existence. The types of event are defined, and an explanation of
-how they are calculated is given.
+This technote introduces the concept of the ``TMAEvent``, and motivates their existence. The types of event are defined, and an explanation of how they are calculated is given.
 
-There are two types of events: ``TRACKING`` and ``SLEWING``, which are
-defined as follows:
+There are two types of events: ``TRACKING`` and ``SLEWING``, which are defined as follows:
 
 -  ``SLEWING``: a SLEW event is *any* movement of the TMA which contains no moments of sidereal tracking, and no moments of being stationary.
 -  ``TRACKING``: A TRACKING event is the exact period during which the TMA was *only* sidereally tracking.
@@ -44,9 +41,7 @@ The EFD has no notion of "the TMA" as an entity, only of its constituent compone
 
 The intention here is twofold:
 
-- To create pythonic interfaces for querying the EFD for the time-series and
-  event-like data for various components of interest during TMA testing and
-  interacting with the events themselves.
+- To create pythonic interfaces for querying the EFD for the time-series and event-like data for various components of interest during TMA testing and interacting with the events themselves.
 - To provide a conceptual framework to talk about the movements of the TMA.
 
 Event Generation
@@ -66,12 +61,7 @@ This section gives an overview of how events are generated. It refers to classes
 The ``TMAStateMachine`` model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The physical TMA, in so far as event generation is concerned, has two
-components: the azimuth axis and the elevation axis. To determine the
-state of these components at a given point in time, three topics must be
-considered for each: the axis' ``MotionState``, ``InPosition`` status
-and ``SystemState``. Therefore, the six topics which must be retrieved
-from from the EFD are:
+The physical TMA, in so far as event generation is concerned, has two components: the azimuth axis and the elevation axis. To determine the state of these components at a given point in time, three topics must be considered for each: the axis' ``MotionState``, ``InPosition`` status and ``SystemState``. Therefore, the six topics which must be retrieved from from the EFD are:
 
 ::
 
@@ -82,24 +72,9 @@ from from the EFD are:
    lsst.sal.MTMount.logevent_elevationInPosition
    lsst.sal.MTMount.logevent_elevationSystemState
 
-The ``<axis>MotionState`` is an ``AxisMotionState`` enum, which takes
-values of ``STOPPING``, ``STOPPED``, ``MOVING_POINT_TO_POINT``,
-``JOGGING``, ``TRACKING``, ``TRACKING_PAUSED``. The ``<axis>InPosition``
-is a boolean, and the ``<axis>SystemState`` is a ``PowerState`` enum,
-which takes values of ``OFF``, ``ON``, ``FAULT``, ``TURNING_ON``,
-``TURNING_OFF``, ``UNKNOWN``.
+The ``<axis>MotionState`` is an ``AxisMotionState`` enum, which takes values of ``STOPPING``, ``STOPPED``, ``MOVING_POINT_TO_POINT``, ``JOGGING``, ``TRACKING``, ``TRACKING_PAUSED``. The ``<axis>InPosition`` is a boolean, and the ``<axis>SystemState`` is a ``PowerState`` enum, which takes values of ``OFF``, ``ON``, ``FAULT``, ``TURNING_ON``, ``TURNING_OFF``, ``UNKNOWN``.
 
-The ``TMAStateMachine`` itself represents the overall state of the TMA
-at a given point in time, held in the with the ``TMAStateMachine.state``
-property. This property is a ``TMAState`` enum, which can be one of:
-``UNINITIALIZED``, ``FAULT``, ``OFF``, ``STOPPED``, ``TRACKING``,
-``SLEWING``. It does this by holding the state of all the relevant
-components and combining them logically to give the overall state. It
-also has the ability to ``apply`` a new row of data from the merged
-dataframe, which is used to evolve the TMA's state with time. It also
-has convenience properties to make the programmatic flow and logical
-statements easier to understand, for example ``isMoving``,
-``isNotMoving``, ``isTracking``, ``isSlewing``, ``canMove``.
+The ``TMAStateMachine`` itself represents the overall state of the TMA at a given point in time, held in the with the ``TMAStateMachine.state`` property. This property is a ``TMAState`` enum, which can be one of: ``UNINITIALIZED``, ``FAULT``, ``OFF``, ``STOPPED``, ``TRACKING``, ``SLEWING``. It does this by holding the state of all the relevant components and combining them logically to give the overall state. It also has the ability to ``apply`` a new row of data from the merged dataframe, which is used to evolve the TMA's state with time. It also has convenience properties to make the programmatic flow and logical statements easier to understand, for example ``isMoving``, ``isNotMoving``, ``isTracking``, ``isSlewing``, ``canMove``.
 
 The ``TMAState`` states
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -146,8 +121,7 @@ State grouping and event creation
 Special Cases Handling
 ~~~~~~~~~~~~~~~~~~~~~~
 
--  Handles cases like events spanning across the start or end of the
-   day.
+-  Handles cases like events spanning across the start or end of the day.
 
 -  Identifies contiguous events and logs information accordingly.
 
@@ -159,15 +133,12 @@ The ``BlockInfoParser`` itself.
 BlockInfo integration
 ~~~~~~~~~~~~~~~~~~~~~
 
-Links block data (observational data) with events for more detailed
-analysis.
+Links block data (observational data) with events for more detailed analysis.
 
 ScriptState evolution
 ~~~~~~~~~~~~~~~~~~~~~
 
-``ScriptState`` which can be any of\ ``UNKNOWN``, ``UNCONFIGURED``,
-``CONFIGURED``, ``RUNNING``, ``PAUSED``, ``ENDING``, ``STOPPING``,
-``FAILING``, ``DONE``, ``STOPPED``, ``FAILED``, ``CONFIGURE_FAILED``.
+``ScriptState`` which can be any of\ ``UNKNOWN``, ``UNCONFIGURED``, ``CONFIGURED``, ``RUNNING``, ``PAUSED``, ``ENDING``, ``STOPPING``, ``FAILING``, ``DONE``, ``STOPPED``, ``FAILED``, ``CONFIGURE_FAILED``.
 
 Additional Features
 ===================
